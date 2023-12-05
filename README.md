@@ -11,8 +11,8 @@ Download the script.
   `mv autograder.sh /usr/local/bin/autograder`
 
 ## Usage
-`autograder`
-Files specifying input and output must have matching names per input/output pair. Furthermore input files must end with `.in` and output files with `.out`.
+Files specifying input and output must have matching names per input/output pair. Furthermore input files must end with `.in` and output files with `.out`. </br>
+The command can be ran with: `autograder`
 ### Flags
   - `-t` specifies timeout value in seconds.                   (default `1`)
   - `-p` specifies the name of the program.                    (default `a.out`)
