@@ -12,6 +12,7 @@ Download the script.
 
 ## Usage
 `autograder`
+Files specifying input and output must have matching names per input/output pair. Furthermore input files must end with `.in` and output files with `.out`.
 ### Flags
   - `-t` specifies timeout value in seconds.                   (default `1`)
   - `-p` specifies the name of the program.                    (default `a.out`)
