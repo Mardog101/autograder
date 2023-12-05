@@ -1,5 +1,5 @@
 # Autograder
-A bash cli utility that runs tests from a folder on an executable and compares the output to output files.
+A bash cli utility that runs tests from a folder on an executable and compares the program output to precomputed output files.
 
 Autograder is designed for quick input output testing of executables.
 
