@@ -20,6 +20,7 @@ The command can be ran with: `autograder`
   - `-p` specifies the name of the program.                    (default `a.out`)
   - `-d` specifies the directory where the tests are located.  (default `tests`)
   - `-v` verbose information about failed tests.               (default `false`)
+  - `-i` shows the input for failed tests.                     (defailt `false`)
   - `-e` specifies the command used to run the executable.     (defailt depends on file type)
 
 Supported files without -e are: any c binary (`.out`) and `.py`.
