@@ -10,6 +10,8 @@ Download the script.
 2. We then move it into our local program directory. </br>
   `mv autograder.sh /usr/local/bin/autograder`
 
+Or we can use the installer: `sudo sh install.sh`.
+
 ## Usage
 Files specifying input and output must have matching names per input/output pair. Furthermore input files must end with `.in` and output files with `.out`. </br>
 The command can be ran with: `autograder`
@@ -17,6 +19,10 @@ The command can be ran with: `autograder`
   - `-t` specifies timeout value in seconds.                   (default `1`)
   - `-p` specifies the name of the program.                    (default `a.out`)
   - `-d` specifies the directory where the tests are located.  (default `tests`)
+  - `-v` verbose information about failed tests.               (default `false`)
+  - `-e` specifies the command used to run the executable.     (defailt depends on file type)
+
+Supported files without -e are: `.out` and `.py`.
 
 ### Example
 Given the following folder structure.
