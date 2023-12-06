@@ -22,7 +22,7 @@ The command can be ran with: `autograder`
   - `-v` verbose information about failed tests.               (default `false`)
   - `-e` specifies the command used to run the executable.     (defailt depends on file type)
 
-Supported files without -e are: `.out` and `.py`.
+Supported files without -e are: any c binary (`.out`) and `.py`.
 
 ### Example
 Given the following folder structure.
