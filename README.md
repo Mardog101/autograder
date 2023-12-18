@@ -23,7 +23,8 @@ The command can be ran with: `autograder`
   - `-i` shows the input for failed tests.                     (default `false`)
   - `-e` specifies the command used to run the executable.     (default depends on file type)
   - `-f` force tests to run even if they have no defined output. (default `false`)
-  - `-p` parameter mode, feeds input through file name as an argument instead of stdin. (default `false`)
+  - `-a` argument mode, feeds input through file name as an argument instead of stdin. (default `false`)
+  - `-s` specify a specific test.
 
 Supported files without -e are: any c binary (`.out`) and `.py`.
 

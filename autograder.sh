@@ -8,7 +8,8 @@ execauto=true
 testfolder="tests"
 verbose=false
 showinput=false
-force=false
+specific=false
+specificTest="0"
 
 colorSuccess='\033[0;32m'
 colorTimeout='\033[0;33m'
@@ -16,7 +17,53 @@ colorFailure='\033[0;31m'
 colorMissing='\033[0;35m'
 colorRemove='\033[0m'
 
-while getopts 't:p:d:vie:af' flag; do
+function printEndBar() {
+  echo -e "${colorFailure}---============================---${colorRemove}"
+}
+
+function perfromExecution() {
+  name=${file%.in}
+  if [ ! -f $name.out ] && [ $force == true ]; then
+      echo -e "${colorMissing}MISSING : $name.out${colorRemove}"
+  else
+    timeout $time $execcmd$execfile $feedsymb $file > $name.out.temp
+    if [[ $? -eq 124 ]]; then
+      echo -e "${colorTimeout}TIMEOUT : $name${colorRemove}"
+      if [ $showinput = true ]; then
+        echo -e "${colorFailure}---========= Input ============---${colorRemove}"
+        cat $name.in
+        if [ $verbose = false ]; then
+          printEndBar
+        fi
+      fi
+      if [ $verbose = true ]; then
+        echo -e "${colorFailure}---========= Expected =========---${colorRemove}"
+        cat $name.out
+        printEndBar
+      fi
+    elif [[ $(diff $name.out $name.out.temp) ]]; then
+      echo -e "${colorFailure}INCORRECT OUTPUT : $name${colorRemove}"
+      if [ $showinput = true ]; then
+        echo -e "${colorFailure}---========= Input ============---${colorRemove}"
+        cat $name.in
+        if [ $verbose = false ]; then
+          printEndBar
+        fi
+      fi
+      if [ $verbose = true ]; then
+        echo -e "${colorFailure}---========= Expected =========---${colorRemove}"
+        cat $name.out
+        echo -e "${colorFailure}---========= Produced =========---${colorRemove}"
+        cat $name.out.temp
+        printEndBar
+      fi
+    else
+      echo -e "${colorSuccess}PASSED : $name${colorRemove}"
+    fi
+  fi
+}
+
+while getopts 't:p:d:vie:s:af' flag; do
   case "${flag}" in
     t) time=${OPTARG} ;;
     p) execfile="${OPTARG}" ;;
@@ -25,6 +72,8 @@ while getopts 't:p:d:vie:af' flag; do
     i) showinput=true ;;
     e) execcmd="${OPTARG}"
        execauto=false;;
+    s) specific=true
+       specificTest="${OPTARG}";;
     a) feedsymb=" ";;
     f) force=true;;
   esac
@@ -40,16 +89,18 @@ if [ ! -d $testfolder ]; then
   exit
 fi
 
-for file in $testfolder/*.in ; do
-  name=${file%.in}
+if [ $specific = false ]; then
+  for file in $testfolder/*.in ; do
+    name=${file%.in}
 
-  if [ ! -f $name.out ] && [ $force == true ]; then
-    echo "Missing $name.out, Ignoring."
-  elif [ ! -f $name.out ]; then
-    echo "Missing $name.out, Aborting (run with -f to force)."
-    exit
-  fi
-done
+    if [ ! -f $name.out ] && [ $force == true ]; then
+      echo "Missing $name.out, Ignoring."
+    elif [ ! -f $name.out ]; then
+      echo "Missing $name.out, Aborting (run with -f to force)."
+      exit
+    fi
+  done
+fi
 
 if [ $execauto = true ]; then
   case ${execfile##*.} in
@@ -60,32 +111,13 @@ if [ $execauto = true ]; then
   esac
 fi
 
-for file in $testfolder/*.in ; do
-  name=${file%.in}
-
-  if [ ! -f $name.out ]; then
-    echo -e "${colorMissing}MISSING : $name.out${colorRemove}"
-  else
-    timeout $time $execcmd$execfile $feedsymb $file > $name.out.temp
-    if [[ $? -eq 124 ]]; then
-      echo -e "${colorTimeout}TIMEOUT : $name${colorRemove}"
-    elif [[ $(diff $name.out $name.out.temp) ]]; then
-      echo -e "${colorFailure}INCORRECT OUTPUT : $name${colorRemove}"
-      if [ $verbose = true ]; then
-        if [ $showinput = true ]; then
-          echo -e "${colorFailure}---========= Input ============---${colorRemove}"
-          cat $name.in
-        fi
-        echo -e "${colorFailure}---========= Expected =========---${colorRemove}"
-        cat $name.out
-        echo -e "${colorFailure}---========= Produced =========---${colorRemove}"
-        cat $name.out.temp
-        echo -e "${colorFailure}---============================---${colorRemove}"
-      fi
-    else
-      echo -e "${colorSuccess}PASSED : $name${colorRemove}"
-    fi
-  fi
-done
+if [ $specific = true ]; then
+  file=$testfolder/$specificTest.in
+  perfromExecution
+else
+  for file in $testfolder/*.in ; do
+    perfromExecution
+  done
+fi
 
 rm -f tests/*.temp
