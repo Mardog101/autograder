@@ -10,6 +10,7 @@ verbose=false
 showinput=false
 specific=false
 specificTest="0"
+force=false
 
 colorSuccess='\033[0;32m'
 colorTimeout='\033[0;33m'
@@ -23,7 +24,7 @@ function printEndBar() {
 
 function perfromExecution() {
   name=${file%.in}
-  if [ ! -f $name.out ] && [ $force == true ]; then
+  if [ ! -f $name.out ] && [ $force = true ]; then
       echo -e "${colorMissing}MISSING : $name.out${colorRemove}"
   else
     timeout $time $execcmd$execfile $feedsymb $file > $name.out.temp
@@ -93,7 +94,7 @@ if [ $specific = false ]; then
   for file in $testfolder/*.in ; do
     name=${file%.in}
 
-    if [ ! -f $name.out ] && [ $force == true ]; then
+    if [ ! -f $name.out ] && [ $force = true ]; then
       echo "Missing $name.out, Ignoring."
     elif [ ! -f $name.out ]; then
       echo "Missing $name.out, Aborting (run with -f to force)."
